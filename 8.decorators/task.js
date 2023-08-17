@@ -1,23 +1,25 @@
-//Задача №1
+//Задача № 1
 function cachingDecoratorNew(func) {
-  let cache = [];
-  function wrapper(...args) {
-    let hash = args.join(',');
-    let objectInCache = cache.find((item) => item.hash === hash);
-    if (objectInCache) {
-      console.log("Из кэша: " + objectInCache.result);
-      return "Из кэша: " + objectInCache.result;
+  const cashe = [];
+
+  return function(...args) {
+    const hash = md5(args);
+    const objectFromCache = cashe.find(object => object.hash === hash);
+    if (objectFromCache) {
+      console.log("Из кэша: " + objectFromCache.value);
+      return "Из кэша: " + objectFromCache.value;
+    } 
+
+    const value = func(...args);
+    cashe.push({hash, value});
+    if (cashe.length > 5) {
+      cashe.shift();
     }
-    let result = func(...args);
-    cache.push({hash, result});
-    if (cache.length > 5) {
-      cache.shift();
-    }
-    console.log("Вычисляем: " + result);
-    return "Вычисляем: " + result;
+    console.log("Вычисляем: " + value);
+    return "Вычисляем: " + value;    
   }
-  return wrapper;
 }
+
 
 //Задача № 2
 function debounceDecoratorNew(func, delay) {
